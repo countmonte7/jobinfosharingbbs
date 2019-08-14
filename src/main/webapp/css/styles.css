@@ -1,0 +1,95 @@
+@charset "EUC-KR";
+
+body {
+	margin: 0;
+	background : #929fba;
+}
+
+.container {
+	width: 80%;
+}
+
+section, #writeBtn{
+	margin: 10px 10px;
+	padding: 20px;
+}
+
+header {
+	background: #55d6aa;
+	
+}
+
+header:after {
+	content: '';
+	display: table;
+	clear: both;
+}
+
+.logo {
+	float: left;
+	padding: 10px 0;
+}
+
+nav {
+	float: right;
+}
+
+nav ul {
+	margin : 0;
+	padding: 0;
+	list-style: none;
+}
+
+nav li {
+	display: inline-block;
+	margin-left: 70px;
+	padding-top:23px;
+} 
+
+section a {
+	text-decoration: none;
+	color: #444;
+}
+
+nav a {
+	color: #444;
+	text-decoration: none;
+	font-size: 14px;
+}
+
+
+
+nav a:hover {
+	color:#000;
+}
+
+h1 {
+	padding-left: 130px;
+	padding-bottom: 20px;
+}
+
+section {
+	margin: 20px auto;
+}
+
+#listTbl {
+	width: 80%;
+	margin: 0 auto;
+	border-collapse: collapse;
+	border-top: 1px solid #444444;
+	border-bottom: 1px solid #444444;
+	text-align: center;
+}
+
+#writeLink {
+	margin-left: 130px;
+}
+
+thead {
+	border-bottom: 1px solid #444444;
+}
+
+#writeBtn {
+	text-decoration: none;
+	color: #444;
+}

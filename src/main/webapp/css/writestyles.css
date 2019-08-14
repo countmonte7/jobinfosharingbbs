@@ -1,0 +1,61 @@
+@charset "EUC-KR";
+
+.container {
+	box-sizing: border-box;
+	margin: 0 auto;
+}
+
+.container a {
+	color : #343036;
+	text-decoration: none;
+}
+
+.container div {
+	margin-top: 10px;
+	padding: 0;
+}
+
+table {
+	margin: 0;
+	width: 100%;
+	padding: 0px;
+}
+
+#writeTbl {
+	margin: 20px auto;
+}
+
+#contentTd {
+	width: 100%;
+	height: 300px;
+}
+
+#content {
+	width: 100%;
+	height: 100%;
+}
+
+tr {
+	width: 
+}
+
+#titleTd {
+	width: 150%;
+	padding: 0;
+	align-items: left;
+}
+
+#pwTd {
+	padding: 0 0;
+}
+
+#title {
+	width: 90%;
+	height: 30px;
+	padding-left: 0;
+}
+
+.inputBox {
+	height: 30px;
+	margin: 0;
+}
