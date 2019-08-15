@@ -1,0 +1,11 @@
+@charset "UTF-8";
+
+#loginSection {
+	margin : 0;
+	padding: 5px 5px;
+	margin-right: 5px;
+	box-sizing : border-box;
+	float: right;
+	background-color: #00897b;
+	font-size: 12px;
+}

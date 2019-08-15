@@ -69,6 +69,11 @@ public class BbsController {
 		return "main";
 	}
 	
+	@GetMapping(path="/signUp")
+	public String getSignUp() {
+		return "signup";
+	}
+	
 	@GetMapping(path="/deleteBbs")
 	public String deleteBbs(@RequestParam(name="id", required=true) int id,
 			ModelMap model) {

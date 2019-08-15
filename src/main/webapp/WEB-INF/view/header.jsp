@@ -14,9 +14,9 @@
 			<img src="" alt="logo" class="logo">
 			<nav>
 				<ul>
-					<li><a href="${pageContext.request.contextPath}/main">메인페이지</a></li>
+					<li><a href="${pageContext.request.contextPath}/">메인페이지</a></li>
 					<li><a href="#">방명록</a></li>
-					<li><a href="#">자유게시판</a></li>
+					<li><a href="${pageContext.request.contextPath}/list">자유게시판</a></li>
 					<li><a href="#">마이페이지</a></li>
 				</ul>
 			</nav>
