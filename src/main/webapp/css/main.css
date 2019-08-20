@@ -9,3 +9,13 @@
 	background-color: #00897b;
 	font-size: 12px;
 }
+
+#loginSection button {
+	height: 20px;
+	cursor: pointer;
+	border: none;
+}
+
+#userLoginStatus {
+	text-align: right;
+}

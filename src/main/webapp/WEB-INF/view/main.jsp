@@ -15,20 +15,48 @@
 </head>
 <body>
 	<jsp:include page="header.jsp" flush="false"></jsp:include>
-	<section id="loginSection">
-		아이디 : <input type="text" id="userId" placeholder="아이디">
-		패스워드 : <input type="password" id="userPwd" placeholder="패스워드">
-		<input type="button" onclick="login()" value="로그인">
-		<input type="button" onclick="getSignUpPage()" value="회원가입">
-	</section>
+	<c:set var="user" value="${user }" />
+	<c:choose>
+		<c:when test="${sessionScope.user eq null }">
+			<section id="loginSection">
+				<form id="login" method="post" action="${pageContext.request.contextPath }/member/login">
+					아이디 : <input type="text" name="userId" id="userId" placeholder="아이디">
+					패스워드 : <input type="password" name="password" id="password" placeholder="패스워드">
+					<button type="button" id="btnLogin">로그인</button>
+					<button type="button" onclick="getSignUpPage()">회원가입</button>
+				</form>
+			</section>
+		</c:when>
+		<c:otherwise>
+			<section id="loginSection">
+				"${user.userId }"님 환영합니다. &nbsp;&nbsp;&nbsp;
+				<a href="${pageContext.request.contextPath }/member/logout">로그아웃</a>
+			</section>
+		</c:otherwise>
+	</c:choose>
 </body>
-<script>
+<script type="text/javascript">
 	function getSignUpPage() {
 		location.href="signUp";
 	}
-	function login() {
-		var id = $("#userId").val();
-		var password = $("#userPwd").val();
-	}
+	$(document).ready(function() {
+		$("#btnLogin").click(function() {
+			var form = $("#login");
+			var userId = $("#userId").val();
+			var password = $("#password").val();
+			var action = $("#login").attr("action");
+			if(userId == "") {
+				alert("아이디를 입력하세요.");
+				$("#userId").focus();
+				return;
+			}else if(password == "") {
+				alert("패스워드를 입력하세요.");
+				$("#password").focus();
+				return;
+			}else {
+				form.submit();
+			}
+		});
+	});
 </script>
 </html>

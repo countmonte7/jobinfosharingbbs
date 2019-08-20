@@ -16,6 +16,7 @@
 		<table id="signupTbl">
 			<tr>
 				<td><input type="text" placeholder="아이디"></td>
+				<td id="dupleChk"><input type="button" value="중복확인"></td>
 			</tr>
 			<tr>
 				<td><input type="password" placeholder="패스워드"></td>
@@ -30,7 +31,7 @@
 				<td><input type="text" placeholder="이름"></td>
 			</tr>
 			<tr>
-				<td><input type="submit" value="회원가입"></td>
+				<td colspan="2" id ="signupBtn"><input type="submit" value="회원가입"></td>
 			</tr>
 		</table>
 	</form>
