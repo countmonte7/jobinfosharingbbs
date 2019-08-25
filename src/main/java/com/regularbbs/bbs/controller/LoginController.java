@@ -1,12 +1,15 @@
 package com.regularbbs.bbs.controller;
 
+import java.util.regex.Pattern;
+
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.xml.ws.http.HTTPException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -46,4 +49,36 @@ public class LoginController {
 		}
 		return "main";
 	}
+	
+	@RequestMapping(value="/member/signUp", method=RequestMethod.GET)
+	public String getSignupPage() {
+		return "signup";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="/member/idCheck", method=RequestMethod.POST)
+	public int idCheck(HttpServletResponse response, @RequestParam(value="userId", required=false) String userId) throws Exception{
+		if(!Pattern.matches("^[a-zA-Z]{1}[a-zA-Z0-9-_.]{3,11}$", userId)) {
+			return -1;
+		}
+		return userService.idCheck(userId);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="/member/emailCheck", method=RequestMethod.POST)
+	public int emailCheck(HttpServletResponse response, @RequestParam(value="email", required=false) String email) throws Exception {
+		System.out.println(email);
+		return userService.emailCheck(email);
+	}
+	
+	@RequestMapping(value="/member/signupAction", method=RequestMethod.POST)
+	public String signUp(HttpSession session, @ModelAttribute User user, BindingResult result, Model model) throws Exception{
+		if(result.hasErrors()) {
+			model.addAttribute("msg", "fail");
+			return "signup";
+		}
+		userService.insertMember(user);
+		return "main";
+	}
+	
 }

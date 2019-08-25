@@ -25,6 +25,7 @@ form {
 	padding: 0;
 }
 
-#signupBtn input {
+#signUpBtn {
 	width: 100%;
+	height: 50px;
 }
