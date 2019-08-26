@@ -4,11 +4,10 @@ import java.util.Date;
 
 public class Bbs {
 	private int id;
-	private String writer;
+	private String userId;
 	private String title;
 	private String content;
 	private Date regdate;
-	private String password;
 	
 	public int getId() {
 		return id;
@@ -16,11 +15,12 @@ public class Bbs {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public String getWriter() {
-		return writer;
+	
+	public String getUserId() {
+		return userId;
 	}
-	public void setWriter(String writer) {
-		this.writer = writer;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 	public String getTitle() {
 		return title;
@@ -40,17 +40,4 @@ public class Bbs {
 	public void setRegdate(Date regdate) {
 		this.regdate = regdate;
 	}
-	public String getPassword() {
-		return password;
-	}
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	@Override
-	public String toString() {
-		return "Bbs [id=" + id + ", writer=" + writer + ", title=" + title + ", content=" + content + ", regdate="
-				+ regdate + ", password=" + password + "]";
-	}
-	
-	
 }

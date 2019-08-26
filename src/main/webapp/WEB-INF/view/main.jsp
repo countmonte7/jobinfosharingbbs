@@ -17,7 +17,7 @@
 	<jsp:include page="header.jsp" flush="false"></jsp:include>
 	<c:set var="user" value="${user }" />
 	<c:choose>
-		<c:when test="${sessionScope.user eq null }">
+		<c:when test="${sessionScope.userId eq null }">
 			<section id="loginSection">
 				<form id="login" method="post" action="${pageContext.request.contextPath }/member/login">
 					아이디 : <input type="text" name="userId" id="userId" placeholder="아이디">
@@ -29,7 +29,7 @@
 		</c:when>
 		<c:otherwise>
 			<section id="loginSection">
-				"${user.userId }"님 환영합니다. &nbsp;&nbsp;&nbsp;
+				"${sessionScope.userId }"님 환영합니다. &nbsp;&nbsp;&nbsp;
 				<a href="${pageContext.request.contextPath }/member/logout">로그아웃</a>
 			</section>
 		</c:otherwise>

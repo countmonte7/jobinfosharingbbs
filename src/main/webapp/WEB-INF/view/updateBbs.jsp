@@ -20,15 +20,9 @@
 			<h2>글쓰기</h2>
 			<table id="writeTbl">
 				<tr>
-					<input type="hidden" name="id">
+					<input type="hidden" name="id" value="${bbs.id }">
+					<input type="hidden" name="userId" value="${bbs.userId }">
 					<td id="titleTd"><input id="title" type="text" name="title" value="<c:out value="${bbs.title }" />"></td>
-					<td>
-						<input class="inputBox" type="text" name="writer" 
-						placeholder="이름" value="<c:out value="${bbs.writer }"/>" />
-					</td>
-					<td id="pwTd">
-						<input class="inputBox" type="password" name="password" placeholder="비밀번호" />
-					</td>
 				</tr>
 				<tr>
 					<td id="contentTd" colspan="4">

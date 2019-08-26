@@ -19,7 +19,7 @@
 			<tr>
 				<td id="bbsId">${bbs.id}</td>
 				<td id="bbsTitle">${bbs.title}</td>
-				<td id="bbsWriter">작성자 : ${bbs.writer }</td>
+				<td id="bbsWriter">작성자 : ${bbs.userId }</td>
 			</tr>
 			<tr>
 				<td colspan="3"><div id="bbsContent">${fn:replace(bbs.content, newLine, br)}</div></td>
@@ -29,10 +29,12 @@
 			</tr>
 		</tbody>
 	</table>
-	<div id="updateDeleteGroup">
-		<a onclick="updatebbs();" href="#">글 수정하기</a>
-		<a onclick="delcheck();" href="#">글 삭제하기</a>
-	</div>
+	<c:if test="${sessionScope.userId eq bbs.userId }">
+		<div id="updateDeleteGroup">
+			<a onclick="updatebbs();" href="#">글 수정하기</a>
+			<a onclick="delcheck();" href="#">글 삭제하기</a>
+		</div>
+	</c:if>
 </body>
 <script>
 	function updatebbs() {

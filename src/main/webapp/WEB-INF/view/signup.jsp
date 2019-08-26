@@ -26,7 +26,7 @@
 				<td><p class="idCheckResult"></p></td>
 			</tr>
 			<tr>
-				<td><input type="password" id="password" name="password" placeholder="패스워드"></td>
+				<td><input type="password" id="password" name="password" placeholder="패스워드(숫자, 문자, 특수문자 혼용 8~20자)"></td>
 			</tr>
 			<tr>
 				<td><input type="password" id="password2" name="password2"  placeholder="패스워드2"></td>
@@ -64,22 +64,22 @@
 		$("#dupleChkBtn").click(function(){
 			
 			var data = {userId : $("#userId").val()};
+			var idRegex = "/^[a-zA-Z]{1}[a-zA-Z0-9-_.]{4,17}/";
 			if(data.userId=="") {
 				$(".idCheckResult").text("아이디를 입력하세요.");
 				return;
+			}else if(!idRegex.test(data.userId)) {
+				$(".idCheckResult").text("올바른 형식의 아이디가 아닙니다.");
 			}
 			$.ajax({
 				url : "${pageContext.request.contextPath}/member/idCheck",
 				type : "post",
 				data : data,
 				success : function(data) {
-					console.log(data);
-					if(data == 0) {
+					if(data != null) {
 						$(".idCheckResult").text("이미 존재하는 아이디입니다.");
-					}else if(data == 1){
+					}else if(data == null){
 						$(".idCheckResult").text("사용할 수 있는 아이디입니다.");
-					}else if(data == -1) {
-						$(".idCheckResult").text("잘못된 형식의 아이디입니다.");
 					}
 				}
 			});
@@ -110,7 +110,7 @@
 			}else if(userId =='' || password=='' || password2=='' || email=="" || name=="") {
 				alert("입력되지 않은 사항이 있습니다.");
 			}else if(!passRegex.test(password)) {
-				alert("패스워드 형식이 올바르지 않습니다.(숫자, 문자, 특수문자 혼용 8~20자)");
+				alert("패스워드 형식이 올바르지 않습니다.");
 			}else if(password !== password2){
 				alert("패스워드 값이 일치하지 않습니다.");
 			}else if(!emailRegex.test(email)) {

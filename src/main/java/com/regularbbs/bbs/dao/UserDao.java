@@ -54,24 +54,15 @@ public class UserDao {
 		}
 	}
 	
-	public int getUserById(String userId){
-		int result = 0;
+	public User getUserById(String userId){
+		User user = null;
 		try {
 			Map<String, ?> param = Collections.singletonMap("userId", userId);
-			boolean idExistence = jdbc.query(GET_USER_BY_ID, param, new ResultSetExtractor<Boolean>() {
-				@Override
-				public Boolean extractData(ResultSet rs) throws SQLException, DataAccessException {
-					return rs.next() ? true : false;
-				}
-			});
-			if(!idExistence) {
-				result = 1;
-			}
-			return result;
+			user = jdbc.queryForObject(GET_USER_BY_ID, param, rowMapper);
 		}catch(EmptyResultDataAccessException e) {
 			e.printStackTrace();
-			return result;
 		}
+		return user;
 	}
 	
 	public int insertMemberInfo(User user) {

@@ -17,8 +17,6 @@
 			<table id="writeTbl">
 				<tr>
 					<td id="titleTd"><input id="title" type="text" name="title" placeholder="제목" /></td>
-					<td><input class="inputBox" type="text" name="writer" placeholder="이름" /></td>
-					<td id="pwTd"><input class="inputBox" type="password" name="password" placeholder="비밀번호" /></td>
 				</tr>
 				<tr>
 					<td id="contentTd" colspan="4"><textarea id="content" name="content" placeholder="내용"></textarea></td>

@@ -11,10 +11,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.regularbbs.bbs.dao.BbsDao;
 import com.regularbbs.bbs.dto.Bbs;
@@ -28,7 +30,7 @@ public class BbsController {
 	@Autowired
 	BbsDao bbsDao;
 	
-	
+	//게시글 리스트 불러오기
 	@GetMapping(path="/list")
 	public String list(@RequestParam(name="start", required=false, defaultValue="0") int start,
 			ModelMap model) {
@@ -50,7 +52,7 @@ public class BbsController {
 		model.addAttribute("pageStartList", pageStartList);
 		return "list";
 	}
-	
+	//글 보기
 	@GetMapping(path="/detailview")
 	public String getBbs(@RequestParam(name="id", required=true) int id,
 			ModelMap model) {
@@ -59,21 +61,23 @@ public class BbsController {
 		return "detailview";
 	}
 	
+	//글쓰기 페이지 가져오기
 	@GetMapping(path="/writeBbs")
 	public String writeBbs() {
 		return "writeBbs";
 	}
-	
+	//메인 페이지 가져오기
 	@GetMapping(path="/main")
 	public String getMain() {
 		return "main";
 	}
 	
+	//회원가입 페이지 가져오기
 	@GetMapping(path="/signUp")
 	public String getSignUp() {
 		return "signup";
 	}
-	
+	//게시글 삭제
 	@GetMapping(path="/deleteBbs")
 	public String deleteBbs(@RequestParam(name="id", required=true) int id,
 			ModelMap model) {
@@ -88,15 +92,16 @@ public class BbsController {
 		}
 		return "deleteBbs";
 	}
-	
+	//게시글 등록
 	@PostMapping(path="/writeAction")
-	public String writeAction(@ModelAttribute Bbs bbs,
+	public String writeAction(@SessionAttribute("userId") String userId, @ModelAttribute Bbs bbs,
 			HttpServletRequest request) {
 		String clientIp = request.getRemoteAddr();
+		bbs.setUserId(userId);
 		bbsService.writeBbs(bbs, clientIp);
 		return "redirect:list";
 	}
-	
+	//게시글 수정 페이지 가져오기
 	@GetMapping(path="/updateBbs")
 	public String getUpdatePage(@RequestParam(name="id", required=true) int id,
 			ModelMap model) {
@@ -104,7 +109,7 @@ public class BbsController {
 		model.addAttribute("bbs", bbs);
 		return "updateBbs";
 	}
-	
+	//게시글 수정
 	@RequestMapping(value="/updateBbs", method=RequestMethod.POST)
 	public String updateBbs(Bbs bbs, HttpServletRequest request) {
 		String ip = request.getRemoteAddr();

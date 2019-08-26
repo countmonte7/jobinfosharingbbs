@@ -8,9 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.regularbbs.bbs.dao.UserDao;
 import com.regularbbs.bbs.dto.User;
-import com.regularbbs.bbs.service.UserService;
-
-import org.springframework.jdbc.core.simple.*;;
+import com.regularbbs.bbs.service.UserService;;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -26,7 +24,7 @@ public class UserServiceImpl implements UserService{
 	
 	@Override
 	@Transactional
-	public int idCheck(String userId) throws Exception {
+	public User idCheck(String userId) throws Exception {
 		return userDao.getUserById(userId);
 	} 
 	
@@ -45,4 +43,10 @@ public class UserServiceImpl implements UserService{
 		System.out.println(result);
 		return result;
 	}
+	
+	@Override
+	public User getUserInfo(String userId) throws Exception {
+		return userDao.getUserById(userId);
+	}
+	
 }
