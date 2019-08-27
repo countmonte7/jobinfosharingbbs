@@ -12,7 +12,7 @@
 	<jsp:include page="header.jsp" flush="false"></jsp:include>
 	<div class="container">
 		
-		<form action="writeAction" method="post">
+		<form action="writeAction" method="post" enctype="multipart/form-data">
 			<h2>글쓰기</h2>
 			<table id="writeTbl">
 				<tr>
@@ -20,6 +20,11 @@
 				</tr>
 				<tr>
 					<td id="contentTd" colspan="4"><textarea id="content" name="content" placeholder="내용"></textarea></td>
+				</tr>
+				<tr>
+					<td><label for="bbsImg">이미지</label>
+					<input type="file" id="bbsImg" name="file" />
+					<div class="select_img"><img src="" /></div></td>
 				</tr>
 				<tr>
 					<td><input type="submit" value="등록"></td>

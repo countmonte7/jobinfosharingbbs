@@ -22,6 +22,7 @@
 					<th id="titleTh">글제목</th>
 					<th>글쓴이</th>
 					<th>작성날짜</th>
+					<th>조회수</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -47,6 +48,7 @@
 					</c:choose>
 					<td>${bbs.userId}</td>
 					<td>${dateInFormat}</td>
+					<td>${bbs.count}</td>
 					</tr>
 				</c:forEach>
 			</tbody>

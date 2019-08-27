@@ -31,7 +31,7 @@ public class BbsDao {
 		this.insertAction = new SimpleJdbcInsert(dataSource)
 				.withTableName("bbs").usingGeneratedKeyColumns("id");
 	}
-	
+	//글 다 가져오기
 	public List<Bbs> selectAll(Integer start, Integer limit) {
 		Map<String, Integer> params = new HashMap<>();
 		params.put("start", start);
@@ -41,7 +41,7 @@ public class BbsDao {
 	public int selectCount() {
 		return jdbc.queryForObject(SELECT_COUNT, Collections.emptyMap(), Integer.class);
 	}
-	
+	//글 번호로 글 가져오기
 	public Bbs selectById(Integer id) {
 		Bbs bbs = null;
 		Map<String, Integer> params = new HashMap<>();
@@ -53,23 +53,24 @@ public class BbsDao {
 		}
 		return bbs;
 	}
-	
+	//글 삽입
 	public int insert(Bbs bbs) {
 		SqlParameterSource params = new BeanPropertySqlParameterSource(bbs);
 		return insertAction.executeAndReturnKey(params).intValue();
 	}
-	
+	//글 삭제
 	public int deleteBbs(Integer id) {
 		SqlParameterSource params = new MapSqlParameterSource("id", id);
 		return jdbc.update(DELETE_BY_BBSID, params);
 	}
-	
+	//글 수정
 	public int update(Bbs bbs) {
 		Map<String, Object> params = new HashMap<>();
 		params.put("id", bbs.getId());
 		params.put("title", bbs.getTitle());
 		params.put("content", bbs.getContent());
 		params.put("regdate", bbs.getRegdate());
+		params.put("count", bbs.getCount());
 		return jdbc.update(UPDATE_BY_BBSID, params);
 	}
 }

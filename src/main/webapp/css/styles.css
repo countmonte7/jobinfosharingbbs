@@ -5,9 +5,46 @@ body {
 	background : #929fba;
 }
 
-.container {
+.menubar {
 	width: 80%;
 }
+
+.menubar li ul {
+	background: #55d6aa;
+	display: none;
+	position: absolute;
+	padding: 0px;
+	margin: 0px;
+	width: 200px;
+	z-index: 200;
+}
+
+.menubar li ul {
+	background: #55d6aa;
+	display: none;
+	position: absolute;
+	padding: 0px;
+	margin: 0px;
+	width: 200px;
+	z-index: 200;
+}
+
+.menubar li ul a{
+	text-align: center;
+	margin-bottom: 10px;
+}
+
+.menubar li:hover ul {
+	display: block;
+	text-decoration: none;
+}
+
+.menubar li ul li:hover {
+	text-decoration: none;
+	
+	background: #408080;
+}
+
 
 section, #writeBtn{
 	margin: 10px 10px;
@@ -98,4 +135,9 @@ thead {
 
 #mypageLink {
 	cursor: pointer;
+}
+
+#board {
+	font-size: 14px;
+	color: #444;
 }

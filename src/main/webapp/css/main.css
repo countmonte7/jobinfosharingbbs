@@ -19,3 +19,15 @@
 #userLoginStatus {
 	text-align: right;
 }
+
+.boardSummary {
+	position: absolute;
+	box-sizing: border-box;
+	display: inline;
+	margin-top: 50px;
+	padding: 30px;
+}
+
+.boardSummary details {
+	margin: 20px 20px;
+}

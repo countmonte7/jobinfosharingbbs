@@ -1,22 +1,28 @@
 package com.regularbbs.bbs.controller;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.management.RuntimeErrorException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.regularbbs.bbs.dao.BbsDao;
 import com.regularbbs.bbs.dto.Bbs;
@@ -35,7 +41,6 @@ public class BbsController {
 	public String list(@RequestParam(name="start", required=false, defaultValue="0") int start,
 			ModelMap model) {
 		List<Bbs> list = bbsService.getBbs(start);
-		
 		int count = bbsService.getCount();
 		int pageIndex = count / bbsService.LIMIT;
 		if(count % bbsService.LIMIT > 0) {
@@ -55,8 +60,27 @@ public class BbsController {
 	//글 보기
 	@GetMapping(path="/detailview")
 	public String getBbs(@RequestParam(name="id", required=true) int id,
-			ModelMap model) {
+			ModelMap model, HttpServletResponse response, HttpServletRequest request,
+			@CookieValue(value="viewCount", defaultValue="0", required=true) String value) {
+		
+		int i = Integer.parseInt(value);
 		Bbs bbs = bbsService.getBbsById(id);
+		String ip = request.getRemoteAddr();
+		try {
+			if(i==0) {
+				++i;
+				bbs.setCount(bbs.getCount() + i);
+				bbsService.updateBbs(bbs, ip);
+			}
+			value = Integer.toString(i);
+		}catch(Exception e) {
+			value="1";
+		}
+		System.out.println(i);
+		Cookie cookie = new Cookie("viewCount", value);
+		cookie.setMaxAge(60*60*1);
+		cookie.setPath("/");
+		response.addCookie(cookie);
 		model.addAttribute("bbs", bbs);
 		return "detailview";
 	}
@@ -95,11 +119,31 @@ public class BbsController {
 	//게시글 등록
 	@PostMapping(path="/writeAction")
 	public String writeAction(@SessionAttribute("userId") String userId, @ModelAttribute Bbs bbs,
-			HttpServletRequest request) {
+			@RequestParam("file") MultipartFile file,HttpServletRequest request) {
+		String fileName = null;
+		String folderPath = "C:/devr/";
+		try (
+				FileOutputStream fos = new FileOutputStream(folderPath + file.getOriginalFilename());
+				InputStream is = file.getInputStream();
+		) {
+			int readCount = 0;
+			byte[] buffer = new byte[1024];
+			while((readCount=is.read(buffer))!= -1) {
+				fos.write(buffer, 0, readCount);
+			}
+		}catch(Exception e) {
+			throw new RuntimeException("file save error");
+		}
+		
+		if(file!= null) {
+			fileName = file.getOriginalFilename();
+		}
 		String clientIp = request.getRemoteAddr();
 		bbs.setUserId(userId);
+		bbs.setCount(0);
+		bbs.setThumbImg(fileName);
 		bbsService.writeBbs(bbs, clientIp);
-		return "redirect:list";
+		return "detailview";
 	}
 	//게시글 수정 페이지 가져오기
 	@GetMapping(path="/updateBbs")

@@ -34,6 +34,35 @@
 			</section>
 		</c:otherwise>
 	</c:choose>
+	<div class="boardSummary">
+		<details open>
+			<summary>채용 공고</summary>
+			<table>
+				<tr><td>sample</td></tr>
+				<tr><td>sample</td></tr>
+				<tr><td>sample</td></tr>
+				<tr><td>sample</td></tr>
+			</table>
+		</details>
+		<details open>
+			<summary>취업 고민</summary>
+			<table>
+				<tr><td>sample</td></tr>
+				<tr><td>sample</td></tr>
+				<tr><td>sample</td></tr>
+				<tr><td>sample</td></tr>
+			</table>
+		</details>
+		<details open>
+			<summary>중고 장터</summary>
+			<table>
+				<tr><td>sample</td></tr>
+				<tr><td>sample</td></tr>
+				<tr><td>sample</td></tr>
+				<tr><td>sample</td></tr>
+			</table>
+		</details>
+	</div>
 </body>
 <script type="text/javascript">
 	function getSignUpPage() {

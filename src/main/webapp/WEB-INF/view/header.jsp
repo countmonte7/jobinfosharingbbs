@@ -15,13 +15,21 @@
 </head>
 <body>
 	<header>
-		<div class="container">
+		<div class="menubar">
 			<img src="" alt="logo" class="logo">
 			<nav>
 				<ul>
 					<li><a href="${pageContext.request.contextPath}/">메인페이지</a></li>
 					<li><a href="#">방명록</a></li>
-					<li><a href="${pageContext.request.contextPath}/list">자유게시판</a></li>
+					<li id="board">
+						자유게시판
+						<ul>
+							<li><a href="${pageContext.request.contextPath}/list">공채소식</a></li>
+							<li><a href="#">자소서 쓰기</a></li>
+							<li><a href="#">취업고민</a></li>
+							<li><a href="#">취업중고장터</a></li>
+						</ul>
+					</li>
 					<li><a id="mypageLink">마이페이지</a></li>
 				</ul>
 			</nav>
@@ -32,7 +40,7 @@
 	$("#mypageLink").click(function() {
 		if(${null eq sessionScope.userId}) {
 			alert('로그인을 해야 볼 수 있습니다.');
-			return;
+			location.href="main";
 		}else {
 			location.href="${pageContext.request.contextPath }/mypage";
 		}

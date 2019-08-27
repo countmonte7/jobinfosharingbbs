@@ -43,4 +43,17 @@ table {
 
 #updateDeleteGroup a {
 	padding-left: 20px;
+	cursor: pointer;
+}
+
+#listLink {
+	margin-left: 1000px;
+	margin-bottom: 100px;
+}
+
+#listLink a {
+	text-decoration: none;
+	position:absolute;
+	text-align: right;
+	color: #444;
 }

@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+    <%@taglib uri="http://www.springframework.org/tags" prefix="spring"%> 
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,7 +23,7 @@
 				<td id="bbsWriter">작성자 : ${bbs.userId }</td>
 			</tr>
 			<tr>
-				<td colspan="3"><div id="bbsContent">${fn:replace(bbs.content, newLine, br)}</div></td>
+				<td colspan="3"><div id="bbsContent">${fn:replace(bbs.content, newLine, br)} <img src="<spring:url value='/img/${bbs.thumbImg }'/>" width="300"></div></td>
 			</tr>
 			<tr>
 				<td colspan="3" id="bbsDate">작성날짜 : ${bbs.regdate}</td>				
@@ -31,10 +32,13 @@
 	</table>
 	<c:if test="${sessionScope.userId eq bbs.userId }">
 		<div id="updateDeleteGroup">
-			<a onclick="updatebbs();" href="#">글 수정하기</a>
-			<a onclick="delcheck();" href="#">글 삭제하기</a>
+			<a onclick="updatebbs();">글 수정하기</a>
+			<a onclick="delcheck();">글 삭제하기</a>
 		</div>
 	</c:if>
+	<div id="listLink">
+		<a href="${pageContext.request.contextPath }/list">목록으로</a>
+	</div>
 </body>
 <script>
 	function updatebbs() {

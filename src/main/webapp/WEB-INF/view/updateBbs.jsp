@@ -36,7 +36,7 @@
 				</tr>
 			</table>
 		</form>
-			<a href="${pageContext.request.contextPath}/list">목록으로</a>
+			<a href="${pageContext.request.contextPath}/detailview?id=${bbs.id}">이전 페이지</a>
 	</div>
 </body>
 </html>

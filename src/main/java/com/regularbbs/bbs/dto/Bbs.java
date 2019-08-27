@@ -8,6 +8,8 @@ public class Bbs {
 	private String title;
 	private String content;
 	private Date regdate;
+	private int count;
+	private String thumbImg;
 	
 	public int getId() {
 		return id;
@@ -40,4 +42,18 @@ public class Bbs {
 	public void setRegdate(Date regdate) {
 		this.regdate = regdate;
 	}
+	public int getCount() {
+		return count;
+	}
+	public void setCount(int count) {
+		this.count = count;
+	}
+	public String getThumbImg() {
+		return thumbImg;
+	}
+	public void setThumbImg(String thumbImg) {
+		this.thumbImg = thumbImg;
+	}
+	
+	
 }
