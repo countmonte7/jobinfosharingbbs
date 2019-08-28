@@ -69,6 +69,12 @@
 		location.href="signUp";
 	}
 	$(document).ready(function() {
+		$("#password").keydown(function(key) {
+			if(key.keyCode==13) {
+				$("#btnLogin").click();
+			}
+		})
+		
 		$("#btnLogin").click(function() {
 			var form = $("#login");
 			var userId = $("#userId").val();

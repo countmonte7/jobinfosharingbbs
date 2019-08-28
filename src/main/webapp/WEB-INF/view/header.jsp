@@ -24,10 +24,10 @@
 					<li id="board">
 						자유게시판
 						<ul>
-							<li><a href="${pageContext.request.contextPath}/list">공채소식</a></li>
+							<li><a href="list">공채소식</a></li>
 							<li><a href="#">자소서 쓰기</a></li>
 							<li><a href="#">취업고민</a></li>
-							<li><a href="#">취업중고장터</a></li>
+							<li><a href="secondhandlist">취업중고장터</a></li>
 						</ul>
 					</li>
 					<li><a id="mypageLink">마이페이지</a></li>
@@ -38,7 +38,7 @@
 </body>
 <script type="text/javascript">
 	$("#mypageLink").click(function() {
-		if(${null eq sessionScope.userId}) {
+		if( ${null eq sessionScope.userId} ) {
 			alert('로그인을 해야 볼 수 있습니다.');
 			location.href="main";
 		}else {

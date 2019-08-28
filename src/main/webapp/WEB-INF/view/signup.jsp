@@ -63,26 +63,27 @@
 		
 		$("#dupleChkBtn").click(function(){
 			
-			var data = {userId : $("#userId").val()};
-			var idRegex = "/^[a-zA-Z]{1}[a-zA-Z0-9-_.]{4,17}/";
-			if(data.userId=="") {
+			var idInput = {userId : $("#userId").val()};
+			var idRegex = /^[a-zA-Z]{1}[a-zA-Z0-9-_.]{4,17}/;
+			if(idInput.userId=="") {
 				$(".idCheckResult").text("아이디를 입력하세요.");
 				return;
-			}else if(!idRegex.test(data.userId)) {
+			}else if(!idRegex.test(idInput.userId)) {
 				$(".idCheckResult").text("올바른 형식의 아이디가 아닙니다.");
-			}
-			$.ajax({
-				url : "${pageContext.request.contextPath}/member/idCheck",
-				type : "post",
-				data : data,
-				success : function(data) {
-					if(data != null) {
-						$(".idCheckResult").text("이미 존재하는 아이디입니다.");
-					}else if(data == null){
-						$(".idCheckResult").text("사용할 수 있는 아이디입니다.");
+			}else {
+				$.ajax({
+					url : "${pageContext.request.contextPath}/member/idCheck",
+					type : "get",
+					data : idInput,
+					success : function(data) {
+						if(data!="") {
+							$(".idCheckResult").text("이미 존재하는 아이디입니다.");
+						}else {
+							$(".idCheckResult").text("사용할 수 있는 아이디입니다.");
+						}
 					}
-				}
-			});
+				});
+			}
 		});
 		
 		$("#signUpBtn").click(function(evt) {

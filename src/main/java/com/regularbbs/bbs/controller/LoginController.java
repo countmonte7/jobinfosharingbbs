@@ -1,9 +1,13 @@
 package com.regularbbs.bbs.controller;
 
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,6 +29,9 @@ public class LoginController {
 	
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	private JavaMailSender mailSender;
 	
 	//로그인
 	@RequestMapping(value="/member/login", method=RequestMethod.POST)
@@ -61,10 +68,11 @@ public class LoginController {
 	
 	//아이디 검사
 	@ResponseBody
-	@RequestMapping(value="/member/idCheck", method=RequestMethod.POST)
+	@RequestMapping(value="/member/idCheck", method=RequestMethod.GET)
 	public User idCheck(HttpServletResponse response, 
 			@RequestParam(value="userId", required=false) String userId) throws Exception{
-		return userService.idCheck(userId);
+		User user = userService.idCheck(userId);
+		return user;
 	}
 	
 	//이메일 검사
@@ -84,7 +92,10 @@ public class LoginController {
 			model.addAttribute("msg", "fail");
 			return "signup";
 		}
-		userService.insertMember(user);
+		User newUser = userService.insertMember(user);
+		if(newUser!=null) {
+			mailSending(newUser.getEmail());
+		}
 		return "main";
 	}
 	
@@ -96,5 +107,23 @@ public class LoginController {
 		User user = userService.getUserInfo(userId);
 		model.addAttribute("user", user);
 		return "mypage";
+	}
+	
+	public void mailSending(String email) {
+		String frommail = "countmonte7@naver.com";
+		String tomail = email;
+		String title = "회원가입 확인 메일";
+		String content = "회원가입이 되셨습니다. 축하합니다.";
+		try {
+			MimeMessage message= mailSender.createMimeMessage();
+			MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");
+			messageHelper.setFrom(frommail);
+			messageHelper.setTo(tomail);
+			messageHelper.setSubject(title);
+			messageHelper.setText(content);
+			mailSender.send(message);
+		}catch(Exception e) {
+			System.out.println(e);
+		}
 	}
 }

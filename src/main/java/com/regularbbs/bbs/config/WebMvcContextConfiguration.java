@@ -1,5 +1,8 @@
 package com.regularbbs.bbs.config;
 
+import java.util.Properties;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +13,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import org.springframework.mail.javamail.*;
 
 @Configuration
 @EnableWebMvc
@@ -47,6 +51,35 @@ public class WebMvcContextConfiguration implements WebMvcConfigurer
 					new org.springframework.web.multipart.commons.CommonsMultipartResolver();
 			multipartResolver.setMaxUploadSize(10485760);
 			return multipartResolver;
+		}
+		
+		@Value("${smtp.host}")
+		private String host;
+		
+		@Value("${smtp.port}")
+		private int port;
+		
+		@Value("${smtp.username}")
+		private String username;
+		
+		@Value("${smtp.password}")
+		private String password;
+		
+		
+		@Bean
+		public JavaMailSender mailSender() {
+			JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+			System.out.println(username);
+			System.out.println(password);
+			mailSender.setHost(host);
+			mailSender.setPort(port);
+			mailSender.setUsername(username);
+			mailSender.setPassword(password);
+			Properties prop = new Properties();
+			prop.put("mail.smtp.auth", "true");
+			prop.put("mail.smtp.ssl.enable", "true");
+			prop.put("mail.smtp.ssl.trust", "true");
+			return mailSender;
 		}
 		
 	}
