@@ -60,27 +60,29 @@ public class BbsController {
 	//글 보기
 	@GetMapping(path="/detailview")
 	public String getBbs(@RequestParam(name="id", required=true) int id,
-			ModelMap model, HttpServletResponse response, HttpServletRequest request,
-			@CookieValue(value="viewCount", defaultValue="0", required=true) String value) {
+			ModelMap model, HttpServletResponse response, HttpServletRequest request) {
 		
-		int i = Integer.parseInt(value);
+		
 		Bbs bbs = bbsService.getBbsById(id);
+		int viewCnt = bbs.getCount();
 		String ip = request.getRemoteAddr();
-		try {
-			if(i==0) {
-				++i;
-				bbs.setCount(bbs.getCount() + i);
-				bbsService.updateBbs(bbs, ip);
+		Cookie[] cookies = request.getCookies();
+		Cookie viewCookie = null;
+		if(cookies!=null && cookies.length > 0) {
+			for(int i=0; i<cookies.length;i++) {
+				if(cookies[i].getName().equals("cookie" + id)) {
+					viewCookie = cookies[i];
+				}
 			}
-			value = Integer.toString(i);
-		}catch(Exception e) {
-			value="1";
 		}
-		System.out.println(i);
-		Cookie cookie = new Cookie("viewCount", value);
-		cookie.setMaxAge(60*60*1);
-		cookie.setPath("/");
-		response.addCookie(cookie);
+		if(viewCookie == null) {
+			Cookie cookie = new Cookie("cookie" + id, "|" + id + "|");
+			cookie.setMaxAge(60*60*1);
+			response.addCookie(cookie);
+			++viewCnt;
+			bbs.setCount(viewCnt);
+			bbsService.updateBbs(bbs, ip);
+		}
 		model.addAttribute("bbs", bbs);
 		return "detailview";
 	}
