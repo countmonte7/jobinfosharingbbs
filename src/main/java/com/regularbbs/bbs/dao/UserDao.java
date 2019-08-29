@@ -1,8 +1,6 @@
 package com.regularbbs.bbs.dao;
 
-import static com.regularbbs.bbs.dao.UserSqls.GET_USER_BY_EMAIL;
-import static com.regularbbs.bbs.dao.UserSqls.GET_USER_BY_ID;
-import static com.regularbbs.bbs.dao.UserSqls.GET_USER_BY_IDANDPW;
+import static com.regularbbs.bbs.dao.UserSqls.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,7 +13,9 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -33,25 +33,38 @@ public class UserDao {
 	
 	private SimpleJdbcInsert insertAction;
 	
+	private JdbcTemplate jdbcTemplate;
+	
 	private RowMapper<User> rowMapper = BeanPropertyRowMapper.newInstance(User.class);
 	
 	@Autowired
 	public void setDataSource(DataSource dataSource) {
 		jdbc = new NamedParameterJdbcTemplate(dataSource);
+		jdbcTemplate = new JdbcTemplate(dataSource);
 		insertAction = new SimpleJdbcInsert(dataSource)
 				.withTableName("user");
 	}
 	
 	public User findUserByIdAndPw(String userId, String password) {
+		if(password==null || password.equals("")) {
+			return null;
+		}
 		try {
 			Map<String, String> map = new HashMap<>();
 			map.put("userId", userId);
 			map.put("password", password);
-			return jdbc.queryForObject(GET_USER_BY_IDANDPW, map, rowMapper);
-		}catch(Exception e) {
-			e.printStackTrace();
-			return null;
+			User resultUser = jdbc.queryForObject(GET_USER_BY_IDANDPW, map, rowMapper);
+			if(resultUser!=null) {
+				return resultUser;
+			}
+		}catch(DataAccessException e) {
+			if(e instanceof IncorrectResultSizeDataAccessException) {
+				return null;
+			}else {
+				e.printStackTrace();
+			}
 		}
+		return null;
 	}
 	
 	public User getUserById(String userId){
@@ -60,7 +73,9 @@ public class UserDao {
 			Map<String, ?> param = Collections.singletonMap("userId", userId);
 			user = jdbc.queryForObject(GET_USER_BY_ID, param, rowMapper);
 		}catch(EmptyResultDataAccessException e) {
-			e.printStackTrace();
+			if(e instanceof IncorrectResultSizeDataAccessException) {
+				return user;
+			}
 		}
 		return user;
 	}
@@ -90,5 +105,18 @@ public class UserDao {
 			e.printStackTrace();
 			return result;
 		}
+	}
+	
+	public int deleteUser(String userId, String password) {
+		int result = 0;
+		try {
+			Map<String, String> map = new HashMap<>();
+			map.put("userId", userId);
+			map.put("password", password);
+			result = jdbc.update(DELETE_USER, map);
+		}catch(EmptyResultDataAccessException e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 }

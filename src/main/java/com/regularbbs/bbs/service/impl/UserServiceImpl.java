@@ -28,6 +28,7 @@ public class UserServiceImpl implements UserService{
 		return userDao.getUserById(userId);
 	} 
 	
+	//회원가입
 	@Override
 	@Transactional(readOnly=false)
 	public User insertMember(User user) throws Exception {
@@ -36,6 +37,7 @@ public class UserServiceImpl implements UserService{
 		return user;
 	}
 	
+	//이메일 존재 여부 확인
 	@Override
 	@Transactional
 	public int emailCheck(String email) throws Exception {
@@ -47,6 +49,16 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public User getUserInfo(String userId) throws Exception {
 		return userDao.getUserById(userId);
+	}
+	
+	//패스워드 일치 확인
+	public User checkPw(String userId, String password) throws Exception{
+		return userDao.findUserByIdAndPw(userId, password);
+	}
+	
+	//회원 탈퇴
+	public int deleteUser(String userId, String password) throws Exception{
+		return userDao.deleteUser(userId, password);
 	}
 	
 }

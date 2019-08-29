@@ -11,4 +11,6 @@ public interface UserService {
 	public User insertMember(User user) throws Exception;
 	public int emailCheck(String email) throws Exception;
 	public User getUserInfo(String userId) throws Exception;
+	public User checkPw(String userId, String password) throws Exception;
+	public int deleteUser(String userId, String password) throws Exception;
 }

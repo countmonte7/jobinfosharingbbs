@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>취업에는 취톡</title>
 <link rel="stylesheet" type="text/css" href="<c:url value='/css/main.css' />" >
 <script
   src="https://code.jquery.com/jquery-3.4.1.js"
@@ -19,7 +19,7 @@
 	<c:choose>
 		<c:when test="${sessionScope.userId eq null }">
 			<section id="loginSection">
-				<form id="login" method="post" action="${pageContext.request.contextPath }/member/login">
+				<form id="login" method="post">
 					아이디 : <input type="text" name="userId" id="userId" placeholder="아이디">
 					패스워드 : <input type="password" name="password" id="password" placeholder="패스워드">
 					<button type="button" id="btnLogin">로그인</button>
@@ -89,7 +89,25 @@
 				$("#password").focus();
 				return;
 			}else {
-				form.submit();
+				$.ajax({
+					url: "member/login",
+					type: "post",
+					data:{userId : userId, password : password},
+					success: function(data) {
+						if(data > 0) {
+							console.log(data);
+							location.href="main";
+						}else if(data==0){
+							console.log(data);
+							alert('아이디가 존재하지 않거나 비밀번호가 틀립니다.');
+							location.href="main";
+						}
+					},
+					error: function(jqXHR, data) {
+						console.log(data);
+						console.log(jqXHR.responseText);
+					}
+				});
 			}
 		});
 	});

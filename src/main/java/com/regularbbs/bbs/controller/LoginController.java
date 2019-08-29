@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.regularbbs.bbs.dto.User;
 import com.regularbbs.bbs.service.UserService;
@@ -34,30 +35,29 @@ public class LoginController {
 	private JavaMailSender mailSender;
 	
 	//로그인
-	@RequestMapping(value="/member/login", method=RequestMethod.POST)
-	public String login(@RequestParam("userId") String userId,
+	@ResponseBody
+	@RequestMapping(value="member/login", method=RequestMethod.POST)
+	public int login(@RequestParam("userId") String userId,
 			@RequestParam("password") String password, Model model) throws Exception{
+		int result = 0;
 		User user = userService.login(userId, password);
 		if(user!=null) {
 			model.addAttribute("userId", user.getUserId());
-			model.addAttribute("msg", "success");
-			return "redirect:http://localhost:8090/bbs/main";
-		}else {
-			model.addAttribute("msg", "fail");
-			System.out.println("실패");
-			return "redirect:http://localhost:8090/bbs/main";
+			return result=1;
 		}
+		return result;
 	}
 	
 	//로그아웃
 	@RequestMapping(value="/member/logout", method=RequestMethod.GET)
-	public String logout(SessionStatus status, Model model, HttpServletResponse response, HttpSession session) throws Exception{
+	public String logout(SessionStatus status, RedirectAttributes redirectAttributes , HttpServletResponse response, HttpSession session) throws Exception{
 		if(session.getAttribute("userId")!=null) {
 			status.setComplete();
+			return "redirect:../main";
 		}else {
-			model.addAttribute("logoutMsg", "fail");
+			redirectAttributes.addFlashAttribute("logoutMsg", "fail");
 		}
-		return "main";
+		return "redirect:../main";
 	}
 	
 	//회원가입 페이지 열기
@@ -125,5 +125,35 @@ public class LoginController {
 		}catch(Exception e) {
 			System.out.println(e);
 		}
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="/checkPassword", method=RequestMethod.POST)
+	public User checkPassword(@RequestParam("userId") String userId, @RequestParam("password") String password) {
+		User user = null;
+		try {
+			user = userService.checkPw(userId, password);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
+	//회원 탈퇴
+	@ResponseBody
+	@RequestMapping(value="/signout", method=RequestMethod.POST)
+	public int signOut(@RequestParam("userId") String userId, @RequestParam("password") String password,
+			HttpSession session) {
+		int result = 0;
+		try {
+			result = userService.deleteUser(userId, password);
+			System.out.println(result);
+			if(result>0) {
+				return result;
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 }
