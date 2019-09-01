@@ -36,6 +36,7 @@
 			<a onclick="delcheck();">글 삭제하기</a>
 		</div>
 	</c:if>
+	<jsp:include page="comment.jsp"></jsp:include>
 	<div id="listLink">
 		<a href="${pageContext.request.contextPath }/list">목록으로</a>
 	</div>

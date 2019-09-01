@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.regularbbs.bbs.dao.BbsDao;
 import com.regularbbs.bbs.dao.LogDao;
 import com.regularbbs.bbs.dto.Bbs;
+import com.regularbbs.bbs.dto.Comment;
 import com.regularbbs.bbs.dto.Log;
 import com.regularbbs.bbs.service.BbsService;
 
@@ -69,5 +70,28 @@ public class BbsServiceImpl implements BbsService{
 		log.setRegdate(new Date());
 		logDao.insert(log);
 		return result;
+	}
+	
+	//댓글 등록하기
+	@Override
+	@Transactional(readOnly=false)
+	public Comment insertComment(Comment comment) {
+		comment.setReg_datetime(new Date());
+		int cCode = bbsDao.insertComment(comment);
+		comment.setC_code(cCode);
+		return comment;
+	}
+	
+	//댓글 리스트 가져오기
+	@Override
+	@Transactional
+	public List<Comment> getComments(Integer start, Integer b_code) {
+		List<Comment> comments = bbsDao.selectLists(start, BbsService.COMMENT_LIMIT, b_code);
+		return comments;
+	}
+	
+	@Override
+	public int getCommentCount(Integer bbsId) {
+		return bbsDao.selectCommentCount(bbsId);
 	}
 }

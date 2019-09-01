@@ -43,6 +43,8 @@ table {
 
 #updateDeleteGroup a {
 	padding-left: 20px;
+	color: #444;
+	text-decoration: none;
 	cursor: pointer;
 }
 

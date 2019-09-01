@@ -1,0 +1,20 @@
+@charset "UTF-8";
+
+#cmntLink {
+	text-decoration: none;
+	color: #444;
+}
+
+.cmtbtnClass {
+	padding: 5px 0;
+	margin-right: 0;
+}
+
+.cmtcontentClass {
+	width: 200px;
+}
+
+.cmtwriterClass {
+	padding: 0px 5px;
+	text-align: center;
+}

@@ -1,5 +1,7 @@
 package com.regularbbs.bbs.dao;
 
+import static com.regularbbs.bbs.dao.BbsSqls.*;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -17,19 +19,22 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import com.regularbbs.bbs.dto.Bbs;
-
-import static com.regularbbs.bbs.dao.BbsSqls.*;
+import com.regularbbs.bbs.dto.Comment;
 
 @Repository
 public class BbsDao {
 	private NamedParameterJdbcTemplate jdbc;
 	private SimpleJdbcInsert insertAction;
+	private SimpleJdbcInsert commentInsert;
 	private RowMapper<Bbs> rowMapper = BeanPropertyRowMapper.newInstance(Bbs.class);
+	private RowMapper<Comment> commentRowMapper = BeanPropertyRowMapper.newInstance(Comment.class);
 	
 	public BbsDao(DataSource dataSource) {
 		this.jdbc = new NamedParameterJdbcTemplate(dataSource);
 		this.insertAction = new SimpleJdbcInsert(dataSource)
 				.withTableName("bbs").usingGeneratedKeyColumns("id");
+		this.commentInsert = new SimpleJdbcInsert(dataSource)
+				.withTableName("comment").usingGeneratedKeyColumns("c_code");
 	}
 	//글 다 가져오기
 	public List<Bbs> selectAll(Integer start, Integer limit) {
@@ -72,5 +77,25 @@ public class BbsDao {
 		params.put("regdate", bbs.getRegdate());
 		params.put("count", bbs.getCount());
 		return jdbc.update(UPDATE_BY_BBSID, params);
+	}
+	
+	//댓글 등록
+	public int insertComment(Comment comment) {
+		SqlParameterSource params = new BeanPropertySqlParameterSource(comment);
+		return commentInsert.executeAndReturnKey(params).intValue();
+	}
+	
+	public List<Comment> selectLists(Integer start, Integer limit, Integer b_code) {
+		Map<String, Integer> params = new HashMap<>();
+		params.put("start", start);
+		params.put("limit", limit);
+		params.put("b_code", b_code);
+		return jdbc.query(SELECT_COMMENTS, params, commentRowMapper);
+	}
+	
+	public int selectCommentCount(int b_code) {
+		Map<String, Integer> params = new HashMap<>();
+		params.put("b_code", b_code);
+		return jdbc.queryForObject(SELECT_COMMENTS_COUNT, params, Integer.class);
 	}
 }

@@ -1,31 +1,38 @@
 package com.regularbbs.bbs.controller;
 
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-import javax.management.RuntimeErrorException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.mysql.cj.xdevapi.JsonArray;
 import com.regularbbs.bbs.dao.BbsDao;
 import com.regularbbs.bbs.dto.Bbs;
+import com.regularbbs.bbs.dto.Comment;
 import com.regularbbs.bbs.service.BbsService;
 
 @Controller
@@ -58,7 +65,7 @@ public class BbsController {
 		return "list";
 	}
 	//글 보기
-	@GetMapping(path="/detailview")
+	@RequestMapping(value="/detailview", method=RequestMethod.GET )
 	public String getBbs(@RequestParam(name="id", required=true) int id,
 			ModelMap model, HttpServletResponse response, HttpServletRequest request) {
 		
@@ -161,5 +168,57 @@ public class BbsController {
 		String ip = request.getRemoteAddr();
 		bbsService.updateBbs(bbs, ip);
 		return "detailview";
+	}
+	
+	//댓글 등록
+	@ResponseBody
+	@RequestMapping(value="/addComment", method=RequestMethod.POST)
+	public Comment insertComment(Comment comment) {
+		Comment insertResult = bbsService.insertComment(comment);
+		return insertResult;
+	}
+	
+	//댓글 리스트 가져오기
+	@ResponseBody
+	@RequestMapping(value="/getCommentList", method=RequestMethod.GET, produces="application/text;charset=utf8")
+	public ResponseEntity commentList(@RequestParam(name="start", required=false, defaultValue="0") int start,
+			@RequestParam(name="b_code") int b_code, ModelMap model, HttpServletRequest request) {
+		
+		HttpHeaders responseHeaders = new HttpHeaders();
+		
+		List<Comment> comments = bbsService.getComments(start, b_code);
+		int count = bbsService.getCommentCount(b_code);
+		int commentPageIndex = count / bbsService.COMMENT_LIMIT;
+		if(count % bbsService.COMMENT_LIMIT > 0) {
+			commentPageIndex++;
+		}
+		List<Integer> commentStartList = new ArrayList<>();
+		for(int i=0;i<commentPageIndex;i++) {
+			int startCmtPageNum = i * bbsService.COMMENT_LIMIT;
+			commentStartList.add(startCmtPageNum);
+		}
+		
+		model.addAttribute("cmtcount", count);
+		
+		ArrayList<HashMap> hmlist = new ArrayList<HashMap>();
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 hh시 mm분");
+		
+//		HashMap infoMap = new HashMap();
+//		infoMap.put(, value)
+		
+		if(comments.size()>0) {
+			for(int i=0;i<comments.size();i++) {
+				HashMap commentMap = new HashMap();
+				commentMap.put("commentId", comments.get(i).getC_code());
+				commentMap.put("comment", comments.get(i).getComment());
+				commentMap.put("writer", comments.get(i).getWriter());
+				commentMap.put("date", sdf.format(comments.get(i).getReg_datetime()));
+				hmlist.add(commentMap);
+			}
+		}
+		
+		JSONArray json = new JSONArray(hmlist);
+		return new ResponseEntity(json.toString(), responseHeaders, HttpStatus.CREATED);
 	}
 }
